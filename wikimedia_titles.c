@@ -34,6 +34,10 @@ Wikimedia_Titles* wikimedia_titles_parse(const char* path) {
      probably have too many local varibles and be to long to
      manage. */
 
+typedef struct userdata{
+int depth;
+}
+
   /* String containing the text of the entire XML file. */
   char* xml;
   int xml_length;
@@ -85,10 +89,16 @@ FILE* f;
   XML_Parser p=  XML_ParserCreate(NULL);
 /*     - Use XML_SetUserData to initialize the user pointer to be a
        pointer to an int storing the number of <title>
-       tags. Initialize that int to 0.
+       tags. Initialize that int to 0.*/
+int titles;
+titles=0;
 
-     - Use XML_SetElementHandler and XML_SetCharacterDataHandler to
+setuserdata(p, void* titles);
+
+/*     - Use XML_SetElementHandler and XML_SetCharacterDataHandler to
        initialize the parser's callbacks.
+
+XML_SetElementHandler(p, start, end);
 
      - The start element handler should examine the name string to see
        whether it is "title". If it is, increment the integer that
